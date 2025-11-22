@@ -1,0 +1,82 @@
+dotnet nuget locals all --clear
+dotnet clean
+dotnet restore
+
+
+// dotnet ef migrations add InitialCreate -s Restore.API -p Restore.Infrastructure  -o Persistence/Migrations/Store -c "StoreDbContext"
+// dotnet ef migrations remove -s Restore.API -p Restore.Infrastructure -c "StoreDbContext"
+
+// dotnet ef database update -s Restore.API  -p Restore.Infrastructure -c "StoreDbContext"
+// dotnet ef database drop -s Restore.API -p Restore.Infrastructure -c "StoreDbContext"
+
+
+
+// dotnet ef migrations add InitialCreate -p Modules/Auth -s IMS -o Data/Migrations -c "AuthDbContext"
+// dotnet ef migrations remove -p Modules/Auth -s IMS -c "AuthDbContext"
+
+// dotnet ef database update -p Modules/Auth -s IMS -c "AuthDbContext"
+// dotnet ef database drop -p Modules/Auth -s IMS -c "AuthDbContext"
+
+
+
+// dotnet ef migrations add InitialCreate -p Modules/Catalog -s IMS -o Data/Migrations -c "CatalogDbContext"
+// dotnet ef migrations remove -p Modules/Catalog -s IMS -c "CatalogDbContext"
+
+// dotnet ef database update -p Modules/Catalog -s IMS -c "CatalogDbContext"
+// dotnet ef database drop -p Modules/Catalog -s IMS -c "CatalogDbContext"
+
+IDENTITY 
+------------------------------------------------------------------------------------------------
+Microsoft.AspNetCore.Authentication.JwtBearer 
+Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+Microsoft.IdentityModel.Tokens
+System.IdentityModel.Tokens.Jwt (old) --> Microsoft.IdentityModel.JsonWebTokens (new)
+
+
+
+// START - To use different connection for Auth, Org and Catalog
+------------------------------------------------------------------------------------------------
+/* 
+##### appsettings.json structure ##### 
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Database=IMS;Username=postgres;Password=postgres",
+    "Auth": "Host=localhost;Database=AuthDb;Username=postgres;Password=postgres",
+    "Org": "Host=localhost;Database=OrgDb;Username=postgres;Password=postgres"
+  }
+}
+
+With this structure:
+
+DbConnectionHelper.GetConnectionStringForContext<AuthDbContext>() → uses Auth
+DbConnectionHelper.GetConnectionStringForContext<OrgDbContext>() → uses Org
+Falls back to DefaultConnection if none found.
+
+ */
+
+ 
+
+/* START - for extension method -  ConfigurationBuilder()
+------------------------------------------------------------------------------------------------
+    ###### Nuget package:  
+
+    dotnet add package Microsoft.Extensions.Configuration → core configuration types
+    dotnet add package Microsoft.Extensions.Configuration.FileExtensions  → allows .AddJsonFile()
+    dotnet add package Microsoft.Extensions.Configuration.Json → parses appsettings.json
+    dotnet add package Microsoft.Extensions.Configuration.EnvironmentVariables → allows AddEnvironmentVariables
+ */
+/*  END
+
+// Backup Code in AppContextBuilder for design time migration
+------------------------------------------------------------------------------------------------
+/* var config = new ConfigurationBuilder()
+       .SetBasePath(Directory.GetCurrentDirectory())
+       .AddJsonFile("appsettings.json")
+       .Build();
+
+        var connectionString = config.GetConnectionString("DefaultConnection"); 
+
+        // Read the connection string from environment or fallback
+        //var connectionString = "Host=localhost;Database=AuthDb;Username=postgres;Password=yourpassword";
+ */

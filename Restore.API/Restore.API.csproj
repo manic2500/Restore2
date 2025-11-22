@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Restore.Application/Restore.Application.csproj" />
+    <ProjectReference Include="../Restore.Common/Restore.Common.csproj" />
+    <ProjectReference Include="../Restore.Domain/Restore.Domain.csproj" />
+    <ProjectReference Include="../Restore.Infrastructure/Restore.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

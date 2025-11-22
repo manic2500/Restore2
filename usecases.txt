@@ -1,0 +1,27 @@
+User Stories
+As a user, I can view all inventories as well as search inventories by names, so that i can manage them.
+
+Use Cases
+
+# Main Scenario
+
+- Pre Conditions
+1. The user is in the inventories page.
+
+- Post Conditions
+2. The user sees the inventories that meet the search condition.
+
+- Detailed Steps
+1. The user enters a few letters in the search box
+2. The user clicks on the View Button.
+
+
+# Alternative Scenario A - Search box empty - 
+[Alternative Scenario is only for the change from the main Scenario, if no changes then no need to include the step]
+
+- Post Conditions
+2a. The user sees all the inventories.
+
+- Detailed Steps
+1a. The user makes the search box empty.
+

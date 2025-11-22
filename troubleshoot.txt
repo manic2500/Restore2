@@ -1,0 +1,8 @@
+Problem-1:
+--------------------------------------------------------------------------------------------------------------------------------------------
+Getting error - Unable to create a 'DbContext' of type 'StoreDbContext'. The exception 'Method not found: 'System.String Microsoft.EntityFrameworkCore.Diagnostics.AbstractionsStrings.ArgumentIsEmpty(System.Object)'.' was thrown while attempting to create an instance. For the different patterns supported at design time, see https://go.microsoft.com/fwlink/?linkid=851728
+
+FIX:
+Postgres Version Mismatch - 
+Upgrade to - <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0-rc.2" />
+--------------------------------------------------------------------------------------------------------------------------------------------

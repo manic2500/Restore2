@@ -1,0 +1,72 @@
+using Microsoft.EntityFrameworkCore;
+using Restore.Application.Interfaces;
+using Restore.Domain.Entities;
+
+
+namespace Restore.Infrastructure.Persistence.Repositories;
+
+
+public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity>
+where TEntity : BaseEntity
+where TContext : DbContext
+{
+    protected readonly TContext _context;
+    protected readonly DbSet<TEntity> _dbSet;
+
+    public GenericRepository(TContext context)
+    {
+        _context = context;
+        _dbSet = _context.Set<TEntity>();
+    }
+
+    public virtual async Task<TEntity[]> GetAllAsync()
+    {
+        return [.. await _dbSet.ToListAsync()];
+    }
+
+    public virtual async Task<TEntity?> GetByPublicIdAsync(Guid id, bool includeDeleted = false)
+    {
+        var query = _dbSet.AsQueryable();
+        if (includeDeleted)
+            query = query.IgnoreQueryFilters();
+
+        return await query.FirstOrDefaultAsync(x => x.PublicId == id);
+        //return await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    public virtual async Task<TEntity> AddAsync(TEntity entity)
+    {
+        await _dbSet.AddAsync(entity);
+        return entity;
+    }
+
+    public virtual Task UpdateAsync(TEntity entity)
+    {
+        _dbSet.Update(entity);
+        return Task.CompletedTask;
+    }
+
+    // 🔹 Soft delete
+    public virtual async Task DeleteAsync(Guid id)
+    {
+        var entity = await GetByPublicIdAsync(id);
+        if (entity != null)
+        {
+            entity.IsDeleted = true;
+            _dbSet.Update(entity);
+        }
+    }
+
+    public virtual async Task<IEnumerable<TEntity>> GetAllDeletedAsync()
+    {
+        return await _dbSet
+                    .IgnoreQueryFilters()
+                    .Where(c => c.IsDeleted)
+                    .ToListAsync();
+    }
+
+    public async Task<int> SaveChangesAsync()
+    {
+        return await _context.SaveChangesAsync();
+    }
+}
