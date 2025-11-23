@@ -1,16 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Build.Tasks.Deployment.Bootstrapper;
+using Restore.API.Responses;
 using Restore.Application.DTO;
 using Restore.Application.UseCases.Products;
 
 namespace Restore.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class ProductsController(
         IGetAllProductsUseCase getAllProducts,
         IGetProductUseCase getProduct
-        ) : ControllerBase
+        ) : BaseApiController
     {
 
         [HttpGet]
@@ -18,7 +17,7 @@ namespace Restore.API.Controllers
         {
             var products = await getAllProducts.ExecuteAsync();
 
-            return Ok(products);
+            return Ok(new SuccessResponse<ProductDto[]>(products));
         }
         [HttpGet("{guid:guid}")]
         public async Task<ActionResult<ProductDto>> GetProductById(Guid guid)

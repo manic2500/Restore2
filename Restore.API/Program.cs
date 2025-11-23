@@ -1,6 +1,8 @@
 using System.Data.Common;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using Restore.API.Filters;
 using Restore.API.Middlewares;
 using Restore.Application;
 using Restore.Infrastructure;
@@ -11,8 +13,16 @@ using Restore.Infrastructure.Persistence.Seeders;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddScoped<ValidationExceptionFilter>();
 
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationExceptionFilter>();
+});
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 builder.Services.AddScoped<DbConnection>(sp =>
 {
     var config = sp.GetRequiredService<IConfiguration>();

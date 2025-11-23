@@ -2,23 +2,32 @@ using System.Net;
 
 namespace Restore.API.Responses;
 
+public record ErrorResponse<T>(T Error, bool Success = false);
 
-public record ErrorResponse(
-    string? Message = "Request failed",
-    string? Details = null,
-    string? StackTrace = null,
-    InnerError? InnerException = null,
+
+public record ExceptionResponse(string Message, HttpStatusCode StatusCode, string CorrelationId);
+
+public record ExceptionResponseDev(
+    string Message,
+    HttpStatusCode StatusCode,
+    string? Details,
+    string? StackTrace,
+    string? ExceptionType
+);
+
+public record ValidationExceptionResponse(
+    IDictionary<string, string[]> Errors,
+    string CorrelationId,
+    string? Message = "One or more validation errors occurred.",
     HttpStatusCode StatusCode = HttpStatusCode.BadRequest
-) : ApiResponse(false, Message ?? string.Empty, StatusCode)
-{
-    // Additional init-only properties
-    /* public string? Details { get; init; } = Details;
-    public string? StackTrace { get; init; } = StackTrace;
-    public InnerError? InnerException { get; init; } = InnerException; */
-}
+);
 
-public record InnerError(
-    string? Message = null,
-    string? StackTrace = null
+public record ValidationExceptionResponseDev(
+    IDictionary<string, string[]> Errors,
+    string? Details,
+    string? StackTrace,
+    string? ExceptionType,
+    string? Message = "One or more validation errors occurred.",
+    HttpStatusCode StatusCode = HttpStatusCode.BadRequest
 );
 

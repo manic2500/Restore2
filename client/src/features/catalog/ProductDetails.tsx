@@ -1,24 +1,17 @@
-import type { Product } from "@/app/models/product";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { APP_CURRENCY } from "@/lib/constants";
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useFetchProductDetailsQuery } from "./catalogApi";
 
 export default function ProductDetails() {
     const { id } = useParams();
-    const [product, setProduct] = useState<Product | null>(null);
 
-    useEffect(() => {
-        fetch(`https://localhost:5001/api/products/${id}`)
-            .then(response => response.json())
-            .then(data => setProduct(data))
-            .catch(error => console.log(error))
-    }, [id]);
+    const { data: product } = useFetchProductDetailsQuery(id ? id : '');
 
-    if (!product) return <div>Loading...</div>
+    if (!product) return null
 
     const productDetails = [
         { label: 'Name', value: product.name },

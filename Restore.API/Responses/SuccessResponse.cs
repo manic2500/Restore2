@@ -2,10 +2,12 @@ using System.Net;
 
 namespace Restore.API.Responses;
 
+
 // Success response
 public record SuccessResponse<T>(
     T? Data,
+    HttpStatusCode StatusCode = HttpStatusCode.OK,
     string Message = "Request successful",
-    HttpStatusCode StatusCode = HttpStatusCode.OK
-) : ApiResponse(true, Message, StatusCode);
+    bool Success = true
+);
 

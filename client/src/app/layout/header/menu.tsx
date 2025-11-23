@@ -1,11 +1,14 @@
 import { Button } from "@/components/ui/button";
 import ModeToggle from "./mode-toggle";
 
-import { EllipsisVertical, ShoppingCart, UserIcon, Presentation } from "lucide-react";
+import { EllipsisVertical, ShoppingCart, UserIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Link } from "react-router-dom";
 
+
 export default function Menu() {
+
+
     return (
         <div className="flex justify-end gap-3">
             <nav className="hidden md:flex w-full max-w-xs gap-1">
@@ -13,11 +16,6 @@ export default function Menu() {
                 <Button asChild variant={'ghost'}>
                     <Link to={'/cart'}>
                         <ShoppingCart /> Cart
-                    </Link>
-                </Button>
-                <Button asChild variant={'secondary'}>
-                    <Link to={'/catalog'}>
-                        <Presentation /> Catalog
                     </Link>
                 </Button>
                 <Button asChild>
@@ -37,11 +35,6 @@ export default function Menu() {
                         <Button asChild variant={'ghost'}>
                             <Link to={'/cart'}>
                                 <ShoppingCart /> Cart
-                            </Link>
-                        </Button>
-                        <Button asChild variant={'default'}>
-                            <Link to={'/catalog'}>
-                                <Presentation /> Catalog
                             </Link>
                         </Button>
                         <Button asChild>

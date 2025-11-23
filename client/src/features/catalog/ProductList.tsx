@@ -1,7 +1,7 @@
 import type { Product } from "../../app/models/product";
 import ProductCard from "./ProductCard";
 
-export default function ProductList({ products }: { products?: Product[] }) {
+export default function ProductList({ products }: { products: Product[] }) {
     return (
         <>
             {/* <div className="flex flex-wrap justify-center gap-6"> */}
