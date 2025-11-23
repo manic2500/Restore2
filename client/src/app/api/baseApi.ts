@@ -20,22 +20,36 @@ export const baseQueryWithErrorHandling = async (args: string | FetchArgs, api: 
     //stop loading
     api.dispatch(stopLoading());
     if (result.error) {
-        const error = result.error as TypedFetchError
-        console.log(error);
-        if (typeof error.status === "number") {
-            switch (error.status) {
-                case 400:
-                case 401:
-                    toast.error(error.data?.error.message ?? "Unknown error")
-                    break;
+        const { status, data } = result.error as TypedFetchError
 
+        if (typeof status === "number") {
+            switch (status) {
+                case 400:
+                    if (data?.error.errors) {
+                        const errFlat = Object.values(data?.error.errors).flat();
+                        return {
+                            error: {
+                                status,
+                                data: errFlat,
+                            }
+                        };
+                    }
+                    else {
+                        toast.error(data?.error.message ?? "Unknown error")
+                    }
+                    break;
+                case 401:
+                case 404:
+                case 500:
+                    toast.error(data?.error.message ?? "Unknown error")
+                    break;
                 default:
                     break;
             }
         }
         else {
             // network / parsing / custom
-            console.error("Non-HTTP error:", error);
+            console.error("Non-HTTP error:", result.error);
         }
 
     }

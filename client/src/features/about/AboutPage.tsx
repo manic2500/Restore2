@@ -12,17 +12,19 @@ export default function AboutPage() {
     const [triggerValidationError] = useLazyGetValidationErrorQuery();
 
     const getValidatonError = async () => {
+
         try {
             await triggerValidationError().unwrap();
-        } catch (error: unknown) {
-            if (error && typeof error === 'object' && 'message' in error
-                && typeof (error as { message: unknown }).message === 'string') {
-                const errorArray = (error as { message: string }).message.split(', ');
-                setValidationErrors(errorArray);
-            }
-
+        } catch (err: any) {
+            console.log("Caught validation errors:", err.data); // err.data is the flattened array
+            setValidationErrors(err.data); // display in UI
         }
-    }
+        /* triggerValidationError().unwrap().catch(error => {
+            const errorArray = (error as { message: string }).message.split(',');
+            setValidationErrors(errorArray);
+        }); */
+    };
+
 
     return (
         <div className="max-w-7xl mx-auto p-4 space-y-4">
@@ -65,6 +67,11 @@ export default function AboutPage() {
                     Test Validation Error
                 </Button>
             </div>
+            Length is - {validationErrors.length}
+            {validationErrors.length > 0 && (
+                <ul>
+                    {validationErrors.map(err => <li key={err}>{err}</li>)}
+                </ul>)}
 
             {/* {validationErrors.length > 0 && (
         <Alert variant="destructive">
