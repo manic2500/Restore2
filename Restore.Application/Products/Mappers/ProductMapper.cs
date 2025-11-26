@@ -1,7 +1,7 @@
-using Restore.Application.DTO;
+using Restore.Application.Products.DTOs;
 using Restore.Domain.Entities;
 
-namespace Restore.Application.Mappers;
+namespace Restore.Application.Products.Mappers;
 
 
 public static class ProductMapper
@@ -11,7 +11,7 @@ public static class ProductMapper
     {
         return new ProductDto
         {
-            PublicId = product.PublicId,
+            ProductId = product.Xid,
             Name = product.Name,
             Description = product.Description,
             Price = product.Price,
@@ -40,7 +40,7 @@ public static class ProductMapper
     {
         return new Product
         {
-            PublicId = dto.PublicId,   // You may choose to ignore this if generated in DB/app
+            Xid = dto.ProductId,   // You may choose to ignore this if generated in DB/app
             Name = dto.Name,
             Description = dto.Description,
             Price = dto.Price,

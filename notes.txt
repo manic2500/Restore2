@@ -1,3 +1,7 @@
+// KILL Existing PORT
+$ kill -9 $(lsof -ti:7001)
+$ lsof -i tcp:7001
+
 dotnet nuget locals all --clear
 dotnet clean
 dotnet restore

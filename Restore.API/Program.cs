@@ -6,24 +6,25 @@ using Restore.API.Filters;
 using Restore.API.Middlewares;
 using Restore.Application;
 using Restore.Infrastructure;
-using Restore.Infrastructure.Persistence.DbContexts;
-using Restore.Infrastructure.Persistence.Seeders;
+/* using Restore.Infrastructure.Persistence.DbContexts;
+using Restore.Infrastructure.Persistence.Seeders; */
 
 
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 
 // Add services to the container.
-builder.Services.AddScoped<ValidationExceptionFilter>();
+services.AddScoped<ValidationExceptionFilter>();
 
-builder.Services.AddControllers(options =>
+services.AddControllers(options =>
 {
     options.Filters.Add<ValidationExceptionFilter>();
 });
-builder.Services.Configure<ApiBehaviorOptions>(options =>
+services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
-builder.Services.AddScoped<DbConnection>(sp =>
+services.AddScoped<DbConnection>(sp =>
 {
     var config = sp.GetRequiredService<IConfiguration>();
     var connection = new NpgsqlConnection(config.GetConnectionString("DefaultConnection"));
@@ -31,18 +32,21 @@ builder.Services.AddScoped<DbConnection>(sp =>
     return connection;
 });
 
-builder.Services.AddInfrastructureServices();
-builder.Services.AddApplicationServices();
 
-builder.Services.AddCors();
+services.AddInfrastructureServices();
+services.AddApplicationServices();
+
+services.AddCors();
 
 var app = builder.Build();
 app.UseMiddleware<GlobalExceptionMiddleware>();// ✅ Global exception middleware
-app.UseCors(opt => opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:3000"));
+
+
+app.UseCors(opt => opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://localhost:3000"));
 app.MapControllers();
 
 // Seeding Data
-try
+/* try
 {
     using var scope = app.Services.CreateScope();
 
@@ -54,7 +58,7 @@ try
 catch (Exception ex)
 {
     Console.WriteLine(ex);
-}
+} */
 
 app.UseHttpsRedirection();
 
@@ -92,4 +96,27 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
+ */
+
+
+/* 
+
+// Required for BasketContext
+services.AddHttpContextAccessor();
+
+app.MapWhen(
+   context => context.Request.Path.StartsWithSegments("/api/basket"),
+   basketApp =>
+   {
+       basketApp.UseMiddleware<BasketIdMiddleware>();
+
+       basketApp.UseRouting();
+       basketApp.UseEndpoints(endpoints =>
+       {
+           endpoints.MapControllers();
+       });
+   }
+);
+
+
  */

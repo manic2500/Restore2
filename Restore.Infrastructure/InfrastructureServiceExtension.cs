@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Restore.Infrastructure.Persistence.Repositories;
 using Restore.Infrastructure.Persistence.DbContexts;
 using Restore.Infrastructure.Persistence.UnitOfWork;
-using Restore.Application.Interfaces;
+using Restore.Common.Interfaces;
+using Restore.Application.Products.Interfaces;
+using Restore.Application.Baskets.Interfaces;
 
 
 namespace Restore.Infrastructure;
@@ -30,6 +32,7 @@ public static class InfrastructureServiceExtension
             options.UseNpgsql(connection).UseSnakeCaseNamingConvention();
         });
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IBasketRepository, BasketRepository>();
 
 
         return services;

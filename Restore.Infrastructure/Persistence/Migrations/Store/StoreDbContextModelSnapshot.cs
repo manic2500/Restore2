@@ -22,6 +22,71 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Restore.Domain.Entities.Basket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<Guid>("Xid")
+                        .HasColumnType("uuid")
+                        .HasColumnName("xid");
+
+                    b.HasKey("Id")
+                        .HasName("pk_baskets");
+
+                    b.ToTable("baskets", (string)null);
+                });
+
+            modelBuilder.Entity("Restore.Domain.Entities.BasketItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BasketId")
+                        .HasColumnType("integer")
+                        .HasColumnName("basket_id");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<Guid>("ProductXid")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_xid");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("numeric")
+                        .HasColumnName("unit_price");
+
+                    b.Property<Guid>("Xid")
+                        .HasColumnType("uuid")
+                        .HasColumnName("xid");
+
+                    b.HasKey("Id")
+                        .HasName("pk_basket_items");
+
+                    b.HasIndex("BasketId")
+                        .HasDatabaseName("ix_basket_items_basket_id");
+
+                    b.ToTable("basket_items", (string)null);
+                });
+
             modelBuilder.Entity("Restore.Domain.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -59,10 +124,6 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                         .HasColumnType("bigint")
                         .HasColumnName("price");
 
-                    b.Property<Guid>("PublicId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("public_id");
-
                     b.Property<int>("QuantityInStock")
                         .HasColumnType("integer")
                         .HasColumnName("quantity_in_stock");
@@ -72,10 +133,29 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                         .HasColumnType("text")
                         .HasColumnName("type");
 
+                    b.Property<Guid>("Xid")
+                        .HasColumnType("uuid")
+                        .HasColumnName("xid");
+
                     b.HasKey("Id")
                         .HasName("pk_products");
 
                     b.ToTable("products", (string)null);
+                });
+
+            modelBuilder.Entity("Restore.Domain.Entities.BasketItem", b =>
+                {
+                    b.HasOne("Restore.Domain.Entities.Basket", null)
+                        .WithMany("Items")
+                        .HasForeignKey("BasketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_basket_items_baskets_basket_id");
+                });
+
+            modelBuilder.Entity("Restore.Domain.Entities.Basket", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

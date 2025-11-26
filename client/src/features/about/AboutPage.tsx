@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useLazyGet400ErrorQuery, useLazyGet401ErrorQuery, useLazyGet404ErrorQuery, useLazyGet500ErrorQuery, useLazyGetValidationErrorQuery } from "./errorApi";
 import { Button } from "@/components/ui/button";
+import { isValidationErrorResponse } from "@/lib/utils/typeGuard";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function AboutPage() {
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -12,17 +15,15 @@ export default function AboutPage() {
     const [triggerValidationError] = useLazyGetValidationErrorQuery();
 
     const getValidatonError = async () => {
-
         try {
             await triggerValidationError().unwrap();
-        } catch (err: any) {
-            console.log("Caught validation errors:", err.data); // err.data is the flattened array
-            setValidationErrors(err.data); // display in UI
+        } catch (err) {
+            if (isValidationErrorResponse(err)) {
+                //console.log("Caught validation errors:", err.data); // err.data is the flattened array
+                setValidationErrors(err.data); // display in UI
+            }
         }
-        /* triggerValidationError().unwrap().catch(error => {
-            const errorArray = (error as { message: string }).message.split(',');
-            setValidationErrors(errorArray);
-        }); */
+
     };
 
 
@@ -67,24 +68,21 @@ export default function AboutPage() {
                     Test Validation Error
                 </Button>
             </div>
-            Length is - {validationErrors.length}
             {validationErrors.length > 0 && (
-                <ul>
-                    {validationErrors.map(err => <li key={err}>{err}</li>)}
-                </ul>)}
+                <Alert variant="destructive">
+                    <AlertTitle>Validation errors</AlertTitle>
 
-            {/* {validationErrors.length > 0 && (
-        <Alert variant="destructive">
-          <AlertTitle>Validation errors</AlertTitle>
-          <ScrollArea className="max-h-60 mt-2">
-            <ul className="list-disc pl-4 space-y-1">
-              {validationErrors.map((err) => (
-                <li key={err}>{err}</li>
-              ))}
-            </ul>
-          </ScrollArea>
-        </Alert>
-      )} */}
+                    <AlertDescription>
+                        <ScrollArea className="max-h-60 mt-2">
+                            <ul className="list-disc pl-4 space-y-1">
+                                {validationErrors.map((err) => (
+                                    <li key={err}>{err}</li>
+                                ))}
+                            </ul>
+                        </ScrollArea>
+                    </AlertDescription>
+                </Alert>
+            )}
         </div>
     );
 }

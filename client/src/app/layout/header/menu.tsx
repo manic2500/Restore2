@@ -14,7 +14,7 @@ export default function Menu() {
             <nav className="hidden md:flex w-full max-w-xs gap-1">
                 <ModeToggle />
                 <Button asChild variant={'ghost'}>
-                    <Link to={'/cart'}>
+                    <Link to={'/basket'}>
                         <ShoppingCart /> Cart
                     </Link>
                 </Button>
@@ -33,7 +33,7 @@ export default function Menu() {
                         <SheetTitle>Menu</SheetTitle>
                         <ModeToggle />
                         <Button asChild variant={'ghost'}>
-                            <Link to={'/cart'}>
+                            <Link to={'/basket'}>
                                 <ShoppingCart /> Cart
                             </Link>
                         </Button>

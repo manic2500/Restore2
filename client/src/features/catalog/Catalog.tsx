@@ -10,7 +10,7 @@ export default function Catalog() {
 
     return (
         <>
-            <ProductList products={data} />
+            <ProductList products={data.data} />
         </>
     );
 }

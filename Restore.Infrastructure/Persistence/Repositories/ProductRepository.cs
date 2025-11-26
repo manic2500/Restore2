@@ -1,6 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
-using Restore.Application.Interfaces;
+using Restore.Application.Products.Interfaces;
 using Restore.Domain.Entities;
 using Restore.Infrastructure.Persistence.DbContexts;
 
@@ -22,9 +22,16 @@ public class ProductRepository(StoreDbContext context) :
             .ToListAsync();
     }
 
-    public async Task UpdateByPublicIdAsync(Product updated)
+    public async Task<List<Product>> GetByXidsAsync(List<Guid> xids)
     {
-        var existing = await _dbSet.FirstOrDefaultAsync(x => x.PublicId == updated.PublicId);
+        if (xids == null || !xids.Any()) return [];
+
+        return await _dbSet.Where(p => xids.Contains(p.Xid)).ToListAsync();
+    }
+
+    public async Task<Product> UpdateByPublicIdAsync(Product updated)
+    {
+        var existing = await _dbSet.FirstOrDefaultAsync(x => x.Xid == updated.Xid);
 
         if (existing == null) throw new KeyNotFoundException("Product not found");
 
@@ -32,7 +39,9 @@ public class ProductRepository(StoreDbContext context) :
         existing.QuantityInStock = updated.QuantityInStock;
         existing.Price = updated.Price;
 
-        await _context.SaveChangesAsync();
+        return existing;
+
+        //await _context.SaveChangesAsync();
     }
 
 }

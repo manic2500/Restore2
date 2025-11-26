@@ -8,11 +8,21 @@ namespace Restore.Infrastructure.Persistence.DbContexts;
 public class StoreDbContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<Product> Products { get; set; }
+    public DbSet<Basket> Baskets { get; set; }
+    public DbSet<BasketItem> BasketItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
         builder.ApplySoftDeleteFilter();
+
+        builder.Entity<Basket>()
+           .HasMany(b => b.Items)
+           .WithOne()
+           .HasForeignKey(i => i.BasketId)
+           .OnDelete(DeleteBehavior.Cascade);
+
+
         /* modelBuilder.Entity<BaseEntity>(entity =>
         {
             entity.Property(e => e.IsDeleted).HasDefaultValue(false);
@@ -30,3 +40,5 @@ public class StoreDbContext(DbContextOptions options) : DbContext(options)
 // dotnet ef database drop -s Restore.API -p Restore.Infrastructure -c "StoreDbContext"
 
 // dotnet ef migrations add TEST -s Restore.API -p Restore.Infrastructure -c "StoreDbContext"
+
+// dotnet ef migrations add BasketEntityAdded -s Restore.API -p Restore.Infrastructure -c "StoreDbContext"

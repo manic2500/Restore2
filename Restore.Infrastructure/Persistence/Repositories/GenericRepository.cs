@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Restore.Application.Interfaces;
+using Restore.Common.Interfaces;
 using Restore.Domain.Entities;
 
 
@@ -24,13 +24,13 @@ where TContext : DbContext
         return [.. await _dbSet.ToListAsync()];
     }
 
-    public virtual async Task<TEntity?> GetByPublicIdAsync(Guid id, bool includeDeleted = false)
+    public virtual async Task<TEntity?> GetByXidAsync(Guid xid, bool includeDeleted = false)
     {
         var query = _dbSet.AsQueryable();
         if (includeDeleted)
             query = query.IgnoreQueryFilters();
 
-        return await query.FirstOrDefaultAsync(x => x.PublicId == id);
+        return await query.FirstOrDefaultAsync(x => x.Xid == xid);
         //return await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
     }
 
@@ -40,21 +40,12 @@ where TContext : DbContext
         return entity;
     }
 
-    public virtual Task UpdateAsync(TEntity entity)
-    {
-        _dbSet.Update(entity);
-        return Task.CompletedTask;
-    }
 
     // 🔹 Soft delete
-    public virtual async Task DeleteAsync(Guid id)
+    public virtual async Task DeleteAsync(Guid xid)
     {
-        var entity = await GetByPublicIdAsync(id);
-        if (entity != null)
-        {
-            entity.IsDeleted = true;
-            _dbSet.Update(entity);
-        }
+        var entity = await GetByXidAsync(xid);
+        entity?.IsDeleted = true;
     }
 
     public virtual async Task<IEnumerable<TEntity>> GetAllDeletedAsync()
@@ -65,8 +56,20 @@ where TContext : DbContext
                     .ToListAsync();
     }
 
-    public async Task<int> SaveChangesAsync()
+    /* public async Task<int> SaveChangesAsync()
     {
         return await _context.SaveChangesAsync();
-    }
+    } */
+
+    /* 
+        No need to call Update() — in fact, Update() can be harmful, 
+        because it marks all properties as modified, 
+        even if only one property changed.
+     */
+    /* public virtual Task UpdateAsync(TEntity entity)
+    {
+        _dbSet.Update(entity);
+        return Task.CompletedTask;
+    } */
+
 }

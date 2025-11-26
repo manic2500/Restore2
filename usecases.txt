@@ -25,3 +25,40 @@ Use Cases
 - Detailed Steps
 1a. The user makes the search box empty.
 
+##############################
+Basket
+##############################
+
+🧼 Summary: Cleanest Domain Design
+BasketItem
+
+✔ IncreaseQuantity(amount)
+✔ DecreaseQuantity(amount)
+✔ No item with quantity <= 0
+
+Basket
+
+✔ AddItem(productXid, price, quantity)
+✔ DecreaseItemQuantity(productXid, amount)
+✔ Removes item when quantity becomes 0
+✔ Deletes basket entirely if empty
+
+UseCases
+
+✔ Add quantity
+✔ Decrease quantity
+✔ Remove item
+✔ Clear basket
+
+🧭 API Endpoint Design
+Add quantity
+POST /api/baskets/{basketXid}/items/{productXid}/increase
+
+Decrease quantity
+POST /api/baskets/{basketXid}/items/{productXid}/decrease
+
+Remove item
+DELETE /api/baskets/{basketXid}/items/{productXid}
+
+Clear basket
+DELETE /api/baskets/{basketXid}

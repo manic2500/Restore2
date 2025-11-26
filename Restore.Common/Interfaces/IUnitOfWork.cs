@@ -1,4 +1,4 @@
-namespace Restore.Infrastructure.Persistence.UnitOfWork;
+namespace Restore.Common.Interfaces;
 
 public interface IUnitOfWork : IDisposable
 {

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Restore.Common.Interfaces;
 
 namespace Restore.Infrastructure.Persistence.UnitOfWork;
 
