@@ -14,7 +14,7 @@ public class IncreaseBasketItemUseCase(IBasketRepository basketRepo, IUnitOfWork
 {
     public async Task ExecuteAsync(Guid basketId, Guid itemId)
     {
-        var basket = await basketRepo.GetByXidAsync(basketId) ?? throw new BasketNotFoundException(basketId);
+        var basket = await basketRepo.GetByExIdAsync(basketId) ?? throw new BasketNotFoundException(basketId);
 
         basket.IncreaseItem(itemId);
 

@@ -9,7 +9,7 @@ public static class DbContextExtensions
         this DbContext context, Guid publicId)
         where T : BaseEntity
     {
-        return context.Set<T>().FirstOrDefaultAsync(x => x.Xid == publicId);
+        return context.Set<T>().FirstOrDefaultAsync(x => x.ExtId == publicId);
     }
 }
 

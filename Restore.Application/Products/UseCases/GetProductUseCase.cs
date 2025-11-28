@@ -14,7 +14,7 @@ public class GetProductUseCase(IProductRepository repository) : IGetProductUseCa
 {
     public async Task<ProductDto> ExecuteAsync(Guid guid)
     {
-        var product = await repository.GetByXidAsync(guid)
+        var product = await repository.GetByExIdAsync(guid)
                             ?? throw new ProductNotFoundException(guid);
 
         return product.ToDto();

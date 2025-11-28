@@ -22,7 +22,7 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                     shipping = table.Column<decimal>(type: "numeric", nullable: false),
                     tax = table.Column<decimal>(type: "numeric", nullable: false),
                     voucher_code = table.Column<string>(type: "text", nullable: true),
-                    xid = table.Column<Guid>(type: "uuid", nullable: false),
+                    ext_id = table.Column<Guid>(type: "uuid", nullable: false),
                     is_deleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -40,7 +40,7 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                     free_shipping_threshold = table.Column<long>(type: "bigint", nullable: false),
                     currency = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    xid = table.Column<Guid>(type: "uuid", nullable: false),
+                    ext_id = table.Column<Guid>(type: "uuid", nullable: false),
                     is_deleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -61,7 +61,7 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                     type = table.Column<string>(type: "text", nullable: false),
                     brand = table.Column<string>(type: "text", nullable: false),
                     quantity_in_stock = table.Column<int>(type: "integer", nullable: false),
-                    xid = table.Column<Guid>(type: "uuid", nullable: false),
+                    ext_id = table.Column<Guid>(type: "uuid", nullable: false),
                     is_deleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -80,7 +80,7 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                     country = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: false),
                     state = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: true),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    xid = table.Column<Guid>(type: "uuid", nullable: false),
+                    ext_id = table.Column<Guid>(type: "uuid", nullable: false),
                     is_deleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -105,7 +105,7 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                     usage_count = table.Column<int>(type: "integer", nullable: false),
                     start_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     end_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    xid = table.Column<Guid>(type: "uuid", nullable: false),
+                    ext_id = table.Column<Guid>(type: "uuid", nullable: false),
                     is_deleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -123,7 +123,7 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                     quantity = table.Column<int>(type: "integer", nullable: false),
                     unit_price = table.Column<decimal>(type: "numeric", nullable: false),
                     product_xid = table.Column<Guid>(type: "uuid", nullable: false),
-                    xid = table.Column<Guid>(type: "uuid", nullable: false),
+                    ext_id = table.Column<Guid>(type: "uuid", nullable: false),
                     is_deleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -146,7 +146,8 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                 name: "ix_vouchers_code",
                 table: "vouchers",
                 column: "code",
-                unique: true);
+                unique: true,
+                filter: "\"is_deleted\" = FALSE");
         }
 
         /// <inheritdoc />

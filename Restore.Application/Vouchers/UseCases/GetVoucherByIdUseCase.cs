@@ -11,7 +11,7 @@ public class GetVoucherByIdUseCase(IVoucherRepository repo) : IGetVoucherByIdUse
 {
     public async Task<VoucherDto?> ExecuteAsync(Guid xid)
     {
-        var voucher = await repo.GetByXidAsync(xid) ?? throw new VoucherNotFoundException(xid);
+        var voucher = await repo.GetByExIdAsync(xid) ?? throw new VoucherNotFoundException(xid);
 
         return voucher.ToDto();
     }

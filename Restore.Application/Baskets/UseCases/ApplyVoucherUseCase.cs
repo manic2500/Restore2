@@ -24,7 +24,7 @@ public class ApplyVoucherUseCase(
     public async Task<BasketDto> ExecuteAsync(Guid basketId, string voucherCode)
     {
         // 1. Load basket
-        var basket = await basketRepo.GetByXidAsync(basketId)
+        var basket = await basketRepo.GetByExIdAsync(basketId)
             ?? throw new BasketNotFoundException(basketId);
 
         // 2. Load voucher
@@ -44,7 +44,7 @@ public class ApplyVoucherUseCase(
         // 4. Compute basket subtotal (in cents)
         var productIds = basket.Items.Select(i => i.ProductXid).ToList();
         var products = await productRepo.GetByXidsAsync(productIds);
-        var lookup = products.ToDictionary(p => p.Xid);
+        var lookup = products.ToDictionary(p => p.ExtId);
 
         var subtotal = basket.Items.Sum(i =>
             i.Quantity * lookup[i.ProductXid].Price

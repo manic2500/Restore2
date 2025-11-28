@@ -12,11 +12,11 @@ GenericRepository<Basket, StoreDbContext>(context),
 IBasketRepository
 {
 
-    public override async Task<Basket?> GetByXidAsync(Guid xid, bool includeDeleted = false)
+    public override async Task<Basket?> GetByExIdAsync(Guid xid, bool includeDeleted = false)
     {
         return await _context.Baskets
             .Include(b => b.Items.OrderBy(i => i.Id))
-            .FirstOrDefaultAsync(b => b.Xid == xid);
+            .FirstOrDefaultAsync(b => b.ExtId == xid);
     }
 
     /* public override async Task DeleteAsync(Guid xid)

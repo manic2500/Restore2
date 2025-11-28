@@ -17,9 +17,9 @@ public class AddBasketItemUseCase(IBasketRepository basketRepo, IProductReposito
 
     public async Task ExecuteAsync(Guid basketId, Guid productId, int quantity)
     {
-        var basket = await basketRepo.GetByXidAsync(basketId) ?? throw new BasketNotFoundException(basketId);
+        var basket = await basketRepo.GetByExIdAsync(basketId) ?? throw new BasketNotFoundException(basketId);
 
-        var product = await productRepo.GetByXidAsync(productId) ?? throw new ProductNotFoundException(productId);
+        var product = await productRepo.GetByExIdAsync(productId) ?? throw new ProductNotFoundException(productId);
 
         if (quantity <= 0) throw new BusinessException("The quantity must be greater than 0.");
 
@@ -28,7 +28,7 @@ public class AddBasketItemUseCase(IBasketRepository basketRepo, IProductReposito
         basket.AddItem(new BasketItem
         {
             BasketId = basket.Id,
-            ProductXid = product.Xid,
+            ProductXid = product.ExtId,
             UnitPrice = product.Price,
             Quantity = quantity
         });

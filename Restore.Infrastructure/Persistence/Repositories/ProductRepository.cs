@@ -26,12 +26,12 @@ public class ProductRepository(StoreDbContext context) :
     {
         if (xids == null || !xids.Any()) return [];
 
-        return await _dbSet.Where(p => xids.Contains(p.Xid)).ToListAsync();
+        return await _dbSet.Where(p => xids.Contains(p.ExtId)).ToListAsync();
     }
 
     public async Task<Product> UpdateByPublicIdAsync(Product updated)
     {
-        var existing = await _dbSet.FirstOrDefaultAsync(x => x.Xid == updated.Xid);
+        var existing = await _dbSet.FirstOrDefaultAsync(x => x.ExtId == updated.ExtId);
 
         if (existing == null) throw new KeyNotFoundException("Product not found");
 

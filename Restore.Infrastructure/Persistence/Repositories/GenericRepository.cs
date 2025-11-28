@@ -25,13 +25,13 @@ where TContext : DbContext
         return [.. await _dbSet.ToListAsync()];
     }
 
-    public virtual async Task<TEntity?> GetByXidAsync(Guid xid, bool includeDeleted = false)
+    public virtual async Task<TEntity?> GetByExIdAsync(Guid exId, bool includeDeleted = false)
     {
         var query = _dbSet.AsQueryable();
         if (includeDeleted)
             query = query.IgnoreQueryFilters();
 
-        return await query.FirstOrDefaultAsync(x => x.Xid == xid);
+        return await query.FirstOrDefaultAsync(x => x.ExtId == exId);
         //return await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
     }
 
@@ -43,9 +43,9 @@ where TContext : DbContext
 
 
     // 🔹 Soft delete
-    public virtual async Task DeleteAsync(Guid xid)
+    public virtual async Task DeleteAsync(Guid exId)
     {
-        var entity = await GetByXidAsync(xid);
+        var entity = await GetByExIdAsync(exId);
         entity?.IsDeleted = true;
     }
 

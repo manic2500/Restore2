@@ -49,14 +49,14 @@ public class Basket : BaseEntity
     }
     public void RemoveItem(Guid itemId)
     {
-        var existing = _items.FirstOrDefault(i => i.Xid == itemId);
+        var existing = _items.FirstOrDefault(i => i.ExtId == itemId);
         if (existing != null)
             _items.Remove(existing);
     }
 
     public void DecreaseItem(Guid itemId)
     {
-        var item = _items.FirstOrDefault(i => i.Xid == itemId) ?? throw new Exception("Item not found");
+        var item = _items.FirstOrDefault(i => i.ExtId == itemId) ?? throw new Exception("Item not found");
         if (item.Quantity <= 1)
             _items.Remove(item);
         else
@@ -64,7 +64,7 @@ public class Basket : BaseEntity
     }
     public void IncreaseItem(Guid itemId)
     {
-        var item = _items.FirstOrDefault(i => i.Xid == itemId) ?? throw new Exception("Item not found");
+        var item = _items.FirstOrDefault(i => i.ExtId == itemId) ?? throw new Exception("Item not found");
         item.Quantity += 1;
     }
     public void Clear()

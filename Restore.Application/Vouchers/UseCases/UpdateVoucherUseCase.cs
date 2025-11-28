@@ -10,7 +10,7 @@ public class UpdateVoucherUseCase(IVoucherRepository repo, IUnitOfWork uow) : IU
 {
     public async Task<VoucherDto> ExecuteAsync(VoucherRequest voucherRequest, Guid xid)
     {
-        var existing = await repo.GetByXidAsync(xid)
+        var existing = await repo.GetByExIdAsync(xid)
                        ?? throw new KeyNotFoundException("Voucher not found.");
 
         // Update allowed fields

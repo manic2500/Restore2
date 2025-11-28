@@ -10,7 +10,7 @@ public class DeleteVoucherUseCase(IVoucherRepository repo, IUnitOfWork uow) : ID
 
     public async Task ExecuteAsync(Guid xid)
     {
-        var voucher = await repo.GetByXidAsync(xid) ?? throw new VoucherNotFoundException(xid);
+        var voucher = await repo.GetByExIdAsync(xid) ?? throw new VoucherNotFoundException(xid);
 
         voucher.IsDeleted = true;
 

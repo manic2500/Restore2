@@ -208,7 +208,7 @@ public class DbInitializer
             context.TaxSettings.Add(new TaxSetting
             {
                 Id = 1,
-                Xid = Guid.NewGuid(),
+                ExtId = Guid.NewGuid(),
                 Name = "GST",
                 TaxPercentage = 8.0m,
                 Country = "IN",
@@ -220,7 +220,7 @@ public class DbInitializer
             context.DeliverySettings.Add(new DeliverySetting
             {
                 Id = 1,
-                Xid = Guid.NewGuid(),
+                ExtId = Guid.NewGuid(),
                 FlatFee = 5000, // ₹50
                 FreeShippingThreshold = 50000, // ₹500
                 Currency = "INR",

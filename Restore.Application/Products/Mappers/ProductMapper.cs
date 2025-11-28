@@ -11,7 +11,7 @@ public static class ProductMapper
     {
         return new ProductDto
         {
-            ProductId = product.Xid,
+            ProductId = product.ExtId,
             Name = product.Name,
             Description = product.Description,
             Price = product.Price,
@@ -40,7 +40,7 @@ public static class ProductMapper
     {
         return new Product
         {
-            Xid = dto.ProductId,   // You may choose to ignore this if generated in DB/app
+            ExtId = dto.ProductId,   // You may choose to ignore this if generated in DB/app
             Name = dto.Name,
             Description = dto.Description,
             Price = dto.Price,

@@ -16,6 +16,6 @@ public class CreateBasketUseCase(IBasketRepository basketRepo, IUnitOfWork UoW) 
         var basket = new Basket();
         await basketRepo.AddAsync(basket);
         await UoW.SaveChangesAsync();
-        return basket.Xid;
+        return basket.ExtId;
     }
 }

@@ -5,10 +5,10 @@ namespace Restore.Common.Interfaces;
 public interface IGenericRepository<TEntity> where TEntity : class
 {
     Task<TEntity> AddAsync(TEntity entity);
-    Task DeleteAsync(Guid xid);
+    Task DeleteAsync(Guid exId);
     Task<TEntity[]> GetAllAsync();
     Task<IEnumerable<TEntity>> GetAllDeletedAsync();
-    Task<TEntity?> GetByXidAsync(Guid xid, bool includeDeleted = false);
+    Task<TEntity?> GetByExIdAsync(Guid exId, bool includeDeleted = false);
     Task<TEntity> GetSingleOrThrowAsync(Expression<Func<TEntity, bool>>? predicate = null, string? errorMessage = null);
     /* 
         SaveChanges() in a generic repository violates the UoW pattern. 

@@ -25,12 +25,12 @@ public class GetBasketUseCase(
 {
     public async Task<BasketDto> ExecuteAsync(Guid basketId)
     {
-        var basket = await basketRepo.GetByXidAsync(basketId) ?? throw new BasketNotFoundException(basketId);
+        var basket = await basketRepo.GetByExIdAsync(basketId) ?? throw new BasketNotFoundException(basketId);
 
         // 1. Load product details for items
         var productIds = basket.Items.Select(i => i.ProductXid).ToList(); // Get all product IDs from the basket items
         var products = await productRepo.GetByXidsAsync(productIds); // Fetch live product data - returns List<Product>
-        var productDict = products.ToDictionary(p => p.Xid); // Build a lookup dictionary: Xid → Product
+        var productDict = products.ToDictionary(p => p.ExtId); // Build a lookup dictionary: Xid → Product
 
         // 2. Convert items to DTO
         var dto = BasketMapper.ToDto(basket, productDict);

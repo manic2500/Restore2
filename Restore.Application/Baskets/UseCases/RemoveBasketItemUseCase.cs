@@ -14,7 +14,7 @@ public class RemoveBasketItemUseCase(IBasketRepository basketRepo, IUnitOfWork U
 {
     public async Task ExecuteAsync(Guid basketId, Guid itemId)
     {
-        var basket = await basketRepo.GetByXidAsync(basketId) ?? throw new BasketNotFoundException(basketId);
+        var basket = await basketRepo.GetByExIdAsync(basketId) ?? throw new BasketNotFoundException(basketId);
         basket.RemoveItem(itemId);
 
         /* if (basket.IsEmpty)

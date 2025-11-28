@@ -18,8 +18,8 @@ public static class BasketMapper
                 throw new ProductNotFoundException(item.ProductXid);
 
             return new BasketItemDto(
-                ItemId: item.Xid,
-                ProductId: product.Xid,
+                ItemId: item.ExtId,
+                ProductId: product.ExtId,
                 Name: product.Name,
                 Price: product.Price,
                 PictureUrl: product.PictureUrl,
@@ -29,7 +29,7 @@ public static class BasketMapper
             );
         }).ToList();
 
-        return new BasketDto(basket.Xid, items);
+        return new BasketDto(basket.ExtId, items);
         /* {
             Discount = basket.Discount,
             Shipping = basket.Shipping,

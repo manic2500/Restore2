@@ -10,7 +10,7 @@ public static class VoucherMapper
     public static VoucherDto ToDto(this Voucher voucher)
     {
         return new VoucherDto(
-            voucher.Xid,
+            voucher.ExtId,
             voucher.Code,
             voucher.Description,
             voucher.DiscountType,

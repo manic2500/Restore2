@@ -13,7 +13,7 @@ public class ClearBasketUseCase(IBasketRepository repository, IUnitOfWork uow) :
 {
     public async Task ExecuteAsync(Guid basketId)
     {
-        var basket = await repository.GetByXidAsync(basketId) ?? throw new BasketNotFoundException(basketId);
+        var basket = await repository.GetByExIdAsync(basketId) ?? throw new BasketNotFoundException(basketId);
         basket.Clear();
         await uow.SaveChangesAsync();
     }

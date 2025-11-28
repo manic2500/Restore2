@@ -35,6 +35,10 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                         .HasColumnType("numeric")
                         .HasColumnName("discount");
 
+                    b.Property<Guid>("ExtId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("ext_id");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
@@ -50,10 +54,6 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                     b.Property<string>("VoucherCode")
                         .HasColumnType("text")
                         .HasColumnName("voucher_code");
-
-                    b.Property<Guid>("Xid")
-                        .HasColumnType("uuid")
-                        .HasColumnName("xid");
 
                     b.HasKey("Id")
                         .HasName("pk_baskets");
@@ -74,6 +74,10 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                         .HasColumnType("integer")
                         .HasColumnName("basket_id");
 
+                    b.Property<Guid>("ExtId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("ext_id");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
@@ -89,10 +93,6 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("numeric")
                         .HasColumnName("unit_price");
-
-                    b.Property<Guid>("Xid")
-                        .HasColumnType("uuid")
-                        .HasColumnName("xid");
 
                     b.HasKey("Id")
                         .HasName("pk_basket_items");
@@ -118,6 +118,10 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                         .HasColumnType("character varying(5)")
                         .HasColumnName("currency");
 
+                    b.Property<Guid>("ExtId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("ext_id");
+
                     b.Property<long>("FlatFee")
                         .HasColumnType("bigint")
                         .HasColumnName("flat_fee");
@@ -133,10 +137,6 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
-
-                    b.Property<Guid>("Xid")
-                        .HasColumnType("uuid")
-                        .HasColumnName("xid");
 
                     b.HasKey("Id")
                         .HasName("pk_delivery_settings");
@@ -162,6 +162,10 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("description");
+
+                    b.Property<Guid>("ExtId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("ext_id");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean")
@@ -190,10 +194,6 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                         .HasColumnType("text")
                         .HasColumnName("type");
 
-                    b.Property<Guid>("Xid")
-                        .HasColumnType("uuid")
-                        .HasColumnName("xid");
-
                     b.HasKey("Id")
                         .HasName("pk_products");
 
@@ -214,6 +214,10 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                         .HasMaxLength(5)
                         .HasColumnType("character varying(5)")
                         .HasColumnName("country");
+
+                    b.Property<Guid>("ExtId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("ext_id");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean")
@@ -238,10 +242,6 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
-
-                    b.Property<Guid>("Xid")
-                        .HasColumnType("uuid")
-                        .HasColumnName("xid");
 
                     b.HasKey("Id")
                         .HasName("pk_tax_settings");
@@ -281,6 +281,10 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("end_date");
 
+                    b.Property<Guid>("ExtId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("ext_id");
+
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -312,10 +316,6 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
                     b.Property<int?>("UsageLimit")
                         .HasColumnType("integer")
                         .HasColumnName("usage_limit");
-
-                    b.Property<Guid>("Xid")
-                        .HasColumnType("uuid")
-                        .HasColumnName("xid");
 
                     b.HasKey("Id")
                         .HasName("pk_vouchers");
