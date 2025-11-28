@@ -7,6 +7,7 @@ using Restore.Infrastructure.Persistence.UnitOfWork;
 using Restore.Common.Interfaces;
 using Restore.Application.Products.Interfaces;
 using Restore.Application.Baskets.Interfaces;
+using Restore.Application.Vouchers.Interfaces;
 
 
 namespace Restore.Infrastructure;
@@ -33,6 +34,9 @@ public static class InfrastructureServiceExtension
         });
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IBasketRepository, BasketRepository>();
+        services.AddScoped<ITaxSettingRepository, TaxSettingRepository>();
+        services.AddScoped<IDeliverySettingRepository, DeliverySettingRepository>();
+        services.AddScoped<IVoucherRepository, VoucherRepository>();
 
 
         return services;

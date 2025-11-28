@@ -10,16 +10,9 @@ public class ProductNotFoundException(Guid publicId) :
 NotFoundException($"Product with id {publicId} not found.")
 {
 }
-public class BasketNotFoundException(Guid publicId) :
-NotFoundException($"Basket with id {publicId} not found.")
-{
-}
+
 
 public class InsufficientInventoryException(string productName, int requested, int available) :
 DomainException($"Cannot reserve {requested} units of {productName}. Only {available} available.")
-{
-}
-
-public class InventoryItemNotFoundException(Guid publicId) : NotFoundException($"Inventory item with id {publicId} not found.")
 {
 }

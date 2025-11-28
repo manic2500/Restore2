@@ -9,6 +9,31 @@ public class Basket : BaseEntity
 
     public decimal TotalPrice => Items.Sum(i => i.Quantity * i.UnitPrice);
 
+    // NEW PROPERTIES
+    public decimal Discount { get; private set; } = 0m;
+    public decimal Shipping { get; private set; } = 0m;
+    public decimal Tax { get; private set; } = 0m;
+    public string? VoucherCode { get; set; }
+
+    public decimal GrandTotal => TotalPrice + Tax + Shipping - Discount;
+
+    // Example methods to set shipping/discount/tax
+    /* public void ApplyDiscount(decimal discountAmount)
+    {
+        Discount = discountAmount < 0 ? 0 : discountAmount;
+    }
+
+    public void SetShipping(decimal shippingAmount)
+    {
+        Shipping = shippingAmount < 0 ? 0 : shippingAmount;
+    }
+
+    public void CalculateTax(decimal taxRate)
+    {
+        Tax = TotalPrice * taxRate;
+    }
+ */
+
     public void AddItem(BasketItem item)
     {
         var existing = _items.FirstOrDefault(i => i.ProductXid == item.ProductXid);

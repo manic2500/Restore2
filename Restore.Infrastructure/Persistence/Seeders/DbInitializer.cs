@@ -197,6 +197,37 @@ public class DbInitializer
         };
 
         context.Products.AddRange(products);
+
+
+        context.SaveChanges();
+    }
+
+    public static void SeedTaxDelivery(StoreDbContext context)
+    {
+        if (!context.TaxSettings.Any())
+            context.TaxSettings.Add(new TaxSetting
+            {
+                Id = 1,
+                Xid = Guid.NewGuid(),
+                Name = "GST",
+                TaxPercentage = 8.0m,
+                Country = "IN",
+                UpdatedAt = DateTime.UtcNow
+            }
+        );
+
+        if (!context.DeliverySettings.Any())
+            context.DeliverySettings.Add(new DeliverySetting
+            {
+                Id = 1,
+                Xid = Guid.NewGuid(),
+                FlatFee = 5000, // ₹50
+                FreeShippingThreshold = 50000, // ₹500
+                Currency = "INR",
+                UpdatedAt = DateTime.UtcNow
+            }
+        );
+
         context.SaveChanges();
     }
 }

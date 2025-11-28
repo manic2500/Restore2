@@ -13,7 +13,9 @@ public class BasketController(
     IAddBasketItemUseCase addBasketItem,
     IIncreaseBasketItemUseCase increaseBasketItem,
     IDecreaseBasketItemUseCase decreaseBasketItem,
-    IRemoveBasketItemUseCase removeItem) : BaseApiController
+    IRemoveBasketItemUseCase removeItem,
+    IApplyVoucherUseCase applyVoucher,
+    IRemoveVoucherUseCase removeVoucher) : BaseApiController
 {
 
 
@@ -73,6 +75,23 @@ public class BasketController(
         await clearBasket.ExecuteAsync(basketId);
         return NoContent();
     }
+
+    [HttpPost("apply-voucher")]
+    public async Task<ActionResult<BasketDto>> ApplyVoucher([FromBody] ApplyVoucherRequest req)
+    {
+        var basketId = await GetOrCreateBasketIdAsync();
+        var result = await applyVoucher.ExecuteAsync(basketId, req.VoucherCode);
+        return Ok(result);
+    }
+
+    [HttpDelete("remove-voucher")]
+    public async Task<IActionResult> RemoveVoucher()
+    {
+        var basketId = await GetOrCreateBasketIdAsync();
+        await removeVoucher.ExecuteAsync(basketId);
+        return NoContent();
+    }
+
 
     private async Task<Guid> GetOrCreateBasketIdAsync(bool canCreate = false)
     {

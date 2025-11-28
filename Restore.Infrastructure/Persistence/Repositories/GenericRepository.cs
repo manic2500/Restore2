@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Restore.Common.Interfaces;
 using Restore.Domain.Entities;
@@ -54,6 +55,18 @@ where TContext : DbContext
                     .IgnoreQueryFilters()
                     .Where(c => c.IsDeleted)
                     .ToListAsync();
+    }
+
+    public async Task<TEntity> GetSingleOrThrowAsync(
+        Expression<Func<TEntity, bool>>? predicate = null,
+        string? errorMessage = null)
+    {
+        var query = predicate == null
+            ? _dbSet
+            : _dbSet.Where(predicate);
+
+        return await query.FirstOrDefaultAsync()
+               ?? throw new KeyNotFoundException(errorMessage ?? $"{typeof(TEntity).Name} not found.");
     }
 
     /* public async Task<int> SaveChangesAsync()

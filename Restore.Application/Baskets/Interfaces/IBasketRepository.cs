@@ -7,3 +7,11 @@ public interface IBasketRepository : IGenericRepository<Basket>
 {
 
 }
+public interface ITaxSettingRepository : IGenericRepository<TaxSetting>
+{
+
+}
+public interface IDeliverySettingRepository : IGenericRepository<DeliverySetting>
+{
+
+}

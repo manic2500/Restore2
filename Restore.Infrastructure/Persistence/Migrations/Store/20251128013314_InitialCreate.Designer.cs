@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Restore.Infrastructure.Persistence.DbContexts;
@@ -11,9 +12,11 @@ using Restore.Infrastructure.Persistence.DbContexts;
 namespace Restore.Infrastructure.Persistence.Migrations.Store
 {
     [DbContext(typeof(StoreDbContext))]
-    partial class StoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251128013314_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -322,8 +325,7 @@ namespace Restore.Infrastructure.Persistence.Migrations.Store
 
                     b.HasIndex("Code")
                         .IsUnique()
-                        .HasDatabaseName("ix_vouchers_code")
-                        .HasFilter("\"is_deleted\" = FALSE");
+                        .HasDatabaseName("ix_vouchers_code");
 
                     b.ToTable("vouchers", (string)null);
                 });

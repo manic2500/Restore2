@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 namespace Restore.Common.Interfaces;
 
 public interface IGenericRepository<TEntity> where TEntity : class
@@ -7,7 +9,7 @@ public interface IGenericRepository<TEntity> where TEntity : class
     Task<TEntity[]> GetAllAsync();
     Task<IEnumerable<TEntity>> GetAllDeletedAsync();
     Task<TEntity?> GetByXidAsync(Guid xid, bool includeDeleted = false);
-
+    Task<TEntity> GetSingleOrThrowAsync(Expression<Func<TEntity, bool>>? predicate = null, string? errorMessage = null);
     /* 
         SaveChanges() in a generic repository violates the UoW pattern. 
     */

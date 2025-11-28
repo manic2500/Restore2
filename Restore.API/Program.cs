@@ -6,6 +6,8 @@ using Restore.API.Filters;
 using Restore.API.Middlewares;
 using Restore.Application;
 using Restore.Infrastructure;
+using Restore.Infrastructure.Persistence.DbContexts;
+using Restore.Infrastructure.Persistence.Seeders;
 /* using Restore.Infrastructure.Persistence.DbContexts;
 using Restore.Infrastructure.Persistence.Seeders; */
 
@@ -46,7 +48,7 @@ app.UseCors(opt => opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().With
 app.MapControllers();
 
 // Seeding Data
-/* try
+try
 {
     using var scope = app.Services.CreateScope();
 
@@ -54,11 +56,12 @@ app.MapControllers();
     ?? throw new InvalidOperationException("Failed to retrieve store context");
 
     DbInitializer.SeedData(context);
+    DbInitializer.SeedTaxDelivery(context);
 }
 catch (Exception ex)
 {
     Console.WriteLine(ex);
-} */
+}
 
 app.UseHttpsRedirection();
 

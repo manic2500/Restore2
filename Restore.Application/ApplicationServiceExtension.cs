@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Restore.Application.Baskets.UseCases;
 using Restore.Application.Products.UseCases;
+using Restore.Application.Vouchers.Interfaces;
+using Restore.Application.Vouchers.UseCases;
 
 
 namespace Restore.Application;
@@ -26,6 +28,16 @@ public static class ApplicationServiceExtension
 
         services.AddScoped<IDecreaseBasketItemUseCase, DecreaseBasketItemUseCase>();
         services.AddScoped<IIncreaseBasketItemUseCase, IncreaseBasketItemUseCase>();
+
+        services.AddScoped<IApplyVoucherUseCase, ApplyVoucherUseCase>();
+        services.AddScoped<IRemoveVoucherUseCase, RemoveVoucherUseCase>();
+
+        // Voucher
+        services.AddScoped<ICreateVoucherUseCase, CreateVoucherUseCase>();
+        services.AddScoped<IGetVoucherByIdUseCase, GetVoucherByIdUseCase>();
+        services.AddScoped<IListVouchersUseCase, ListVouchersUseCase>();
+        services.AddScoped<IUpdateVoucherUseCase, UpdateVoucherUseCase>();
+        services.AddScoped<IDeleteVoucherUseCase, DeleteVoucherUseCase>();
 
         return services;
     }
