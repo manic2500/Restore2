@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Restore.API.Filters;
+
+//using Restore.API.Filters;
 using Restore.API.Middlewares;
 using Restore.Application;
 using Restore.Infrastructure;
@@ -26,6 +28,7 @@ services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
+//services.AddControllers();
 services.AddScoped<DbConnection>(sp =>
 {
     var config = sp.GetRequiredService<IConfiguration>();

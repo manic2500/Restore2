@@ -1,27 +1,29 @@
 using Restore.Application.Baskets.Interfaces;
-using Restore.Common.Exceptions;
+using Restore.Common.DTOs;
 using Restore.Common.Interfaces;
-using Restore.Domain.Exceptions;
+using Restore.Common.Utilities;
+using Restore.Common.Extensions;
+
 
 namespace Restore.Application.Baskets.UseCases;
 
 public interface IRemoveBasketItemUseCase
 {
-    Task ExecuteAsync(Guid basketXid, Guid productXid);
+    Task<MethodResult> ExecuteAsync(Guid basketXid, Guid productXid);
 }
 
 public class RemoveBasketItemUseCase(IBasketRepository basketRepo, IUnitOfWork UoW) : IRemoveBasketItemUseCase
 {
-    public async Task ExecuteAsync(Guid basketId, Guid itemId)
+    public async Task<MethodResult> ExecuteAsync(Guid basketId, Guid itemId)
     {
-        var basket = await basketRepo.GetByExIdAsync(basketId) ?? throw new BasketNotFoundException(basketId);
-        basket.RemoveItem(itemId);
+        var basketResult = await basketRepo.GetRequiredResultAsync(basketId);
+        if (!basketResult.Success)
+            return Result.Error(basketResult.Status, basketResult.Error!);
 
-        /* if (basket.IsEmpty)
-        {
-            await basketRepo.DeleteAsync(basketId);
-        } */
+        basketResult.Data.RemoveItem(itemId);
 
         await UoW.SaveChangesAsync();
+
+        return Result.Ok();
     }
 }

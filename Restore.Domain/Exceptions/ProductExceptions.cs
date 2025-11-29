@@ -1,4 +1,4 @@
-using Restore.Common.Exceptions;
+/* using Restore.Common.Exceptions;
 
 namespace Restore.Domain.Exceptions;
 
@@ -16,3 +16,4 @@ public class InsufficientInventoryException(string productName, int requested, i
 DomainException($"Cannot reserve {requested} units of {productName}. Only {available} available.")
 {
 }
+ */

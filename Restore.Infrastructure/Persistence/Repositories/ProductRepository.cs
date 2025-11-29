@@ -1,4 +1,3 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 using Restore.Application.Products.Interfaces;
 using Restore.Domain.Entities;
@@ -24,12 +23,12 @@ public class ProductRepository(StoreDbContext context) :
 
     public async Task<List<Product>> GetByXidsAsync(List<Guid> xids)
     {
-        if (xids == null || !xids.Any()) return [];
+        if (xids == null || xids.Count == 0) return [];
 
         return await _dbSet.Where(p => xids.Contains(p.ExtId)).ToListAsync();
     }
 
-    public async Task<Product> UpdateByPublicIdAsync(Product updated)
+    /* public async Task<Product> UpdateByPublicIdAsync(Product updated)
     {
         var existing = await _dbSet.FirstOrDefaultAsync(x => x.ExtId == updated.ExtId);
 
@@ -41,7 +40,6 @@ public class ProductRepository(StoreDbContext context) :
 
         return existing;
 
-        //await _context.SaveChangesAsync();
-    }
+    } */
 
 }

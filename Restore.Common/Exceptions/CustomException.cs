@@ -1,4 +1,4 @@
-namespace Restore.Common.Exceptions;
+/* namespace Restore.Common.Exceptions;
 
 // Base exception for domain/service errors
 public abstract class ServiceException(string message) : Exception(message)
@@ -27,3 +27,4 @@ public class BusinessException(string message) : ServiceException(message)
 public class UnauthorizedException(string message) : ServiceException(message)
 {
 }
+ */

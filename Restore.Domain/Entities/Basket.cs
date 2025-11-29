@@ -36,7 +36,7 @@ public class Basket : BaseEntity
 
     public void AddItem(BasketItem item)
     {
-        var existing = _items.FirstOrDefault(i => i.ProductXid == item.ProductXid);
+        var existing = _items.FirstOrDefault(i => i.ProductExtId == item.ProductExtId);
 
         if (existing != null)
         {

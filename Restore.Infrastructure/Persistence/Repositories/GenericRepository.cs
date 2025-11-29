@@ -69,6 +69,15 @@ where TContext : DbContext
                ?? throw new KeyNotFoundException(errorMessage ?? $"{typeof(TEntity).Name} not found.");
     }
 
+    public async Task<TEntity?> GetSingleAsync(Expression<Func<TEntity, bool>>? predicate = null)
+    {
+        var query = predicate == null
+            ? _dbSet
+            : _dbSet.Where(predicate);
+
+        return await query.FirstOrDefaultAsync();
+
+    }
     /* public async Task<int> SaveChangesAsync()
     {
         return await _context.SaveChangesAsync();

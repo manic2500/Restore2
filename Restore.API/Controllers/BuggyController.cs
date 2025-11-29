@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+/* using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Restore.Common.Exceptions;
@@ -61,3 +61,4 @@ public class UserDto
     public string Name { get; set; } = default!;
 }
 
+ */

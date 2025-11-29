@@ -4,17 +4,96 @@ using Restore.Application.Baskets.Interfaces;
 using Restore.Application.Baskets.Mappers;
 using Restore.Application.Products.Interfaces;
 using Restore.Application.Vouchers.Interfaces;
+using Restore.Common.DTOs;
+using Restore.Common.Utilities;
 using Restore.Domain.Entities;
-using Restore.Domain.Exceptions;
+using Restore.Common.Extensions;
 
 namespace Restore.Application.Baskets.UseCases;
 
 public interface IGetBasketUseCase
 {
-    Task<BasketDto> ExecuteAsync(Guid basketXid);
+    Task<MethodResult<BasketDto>> ExecuteAsync(Guid basketExtId);
 }
 
 public class GetBasketUseCase(
+    IBasketRepository basketRepo,
+    IProductRepository productRepo,
+    ITaxSettingRepository taxRepo,
+    IDeliverySettingRepository deliveryRepo,
+    IVoucherRepository voucherRepo,
+    IRemoveVoucherUseCase removeVoucher
+    ) : IGetBasketUseCase
+{
+    public async Task<MethodResult<BasketDto>> ExecuteAsync(Guid basketId)
+    {
+        // 1. Load basket
+        var basketResult = await basketRepo.GetRequiredResultAsync(basketId);
+        if (!basketResult.Success)
+            return Result.Error<BasketDto>(basketResult.Status, basketResult.Error!);
+
+        var basket = basketResult.Data;
+
+        // 2. Load product details
+        var productIds = basket.Items.Select(i => i.ProductExtId).ToList();
+        var products = await productRepo.GetByXidsAsync(productIds);
+
+        var productDict = products.ToDictionary(p => p.ExtId);
+
+        // 3. Convert items → DTO using mapper that returns MethodResult<BasketDto>
+        var dtoResult = BasketMapper.ToDto(basket, productDict);
+        if (!dtoResult.Success)
+            return Result.Error<BasketDto>(dtoResult.Status, dtoResult.Error!);
+
+        var dto = dtoResult.Data;
+
+        // 4. Load tax and delivery settings
+        var tax = await taxRepo.GetSingleAsync();
+        if (tax is null)
+            return Result.ValidationError<BasketDto>("Tax information is not available.");
+
+        var delivery = await deliveryRepo.GetSingleAsync();
+        if (delivery is null)
+            return Result.ValidationError<BasketDto>("Delivery information is not available.");
+
+        // 5. Load voucher (if applied)
+        Voucher? voucher = null;
+        var hasVoucher = !string.IsNullOrWhiteSpace(basket.VoucherCode);
+
+        if (hasVoucher)
+        {
+            voucher = await voucherRepo.GetSingleAsync(v => v.Code == basket.VoucherCode);
+            if (voucher is null)
+                return Result.NotFound<BasketDto>("Invalid coupon.");
+        }
+
+        // 6. Use price calculator
+        var calc = new BasketPriceCalculator(tax, delivery, voucher);
+
+        dto.Tax = calc.CalculateTax(dto.SubTotal);
+        dto.Shipping = calc.CalculateShipping(dto.SubTotal);
+        dto.Discount = calc.CalculateDiscount(dto.SubTotal);
+
+        // 7. Handle voucher eligibility
+        bool voucherInvalid = dto.Discount == 0 && hasVoucher;
+
+        if (voucherInvalid)
+        {
+            await removeVoucher.ExecuteAsync(basketId);
+            basket.VoucherCode = null;
+            dto.AppliedVoucher = null;
+        }
+        else
+        {
+            dto.AppliedVoucher = basket.VoucherCode;
+        }
+
+        return Result.Ok(dto);
+    }
+}
+
+
+/* public class GetBasketUseCase(
     IBasketRepository basketRepo,
     IProductRepository productRepo,
     ITaxSettingRepository taxRepo,
@@ -72,7 +151,7 @@ public class GetBasketUseCase(
         return dto;
 
     }
-}
+} */
 
 /* 
 

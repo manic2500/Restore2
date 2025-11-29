@@ -1,22 +1,40 @@
-using System;
 using Restore.Application.Baskets.DTOs;
+using Restore.Common.DTOs;
+using Restore.Common.Utilities;
 using Restore.Domain.Entities;
-using Restore.Domain.Exceptions;
 
 namespace Restore.Application.Baskets.Mappers;
 
 public static class BasketMapper
 {
-    /// <summary>
-    /// Maps Basket → BasketDto using live product data.
-    /// </summary>
-    public static BasketDto ToDto(Basket basket, IReadOnlyDictionary<Guid, Product> productLookup)
+    public static MethodResult<BasketDto> ToDto(Basket basket, IReadOnlyDictionary<Guid, Product> productLookup)
     {
-        var items = basket.Items.Select(item =>
+        List<BasketItemDto> items = [];
+        foreach (var item in basket.Items)
         {
-            if (!productLookup.TryGetValue(item.ProductXid, out var product))
-                throw new ProductNotFoundException(item.ProductXid);
+            if (!productLookup.TryGetValue(item.ProductExtId, out var product))
+            {
+                return Result.NotFound<BasketDto>($"Product with id {item.ProductExtId} not found.");
+            }
+            items.Add(new BasketItemDto(
+                ItemId: item.ExtId,
+                ProductId: product.ExtId,
+                Name: product.Name,
+                Price: product.Price,
+                PictureUrl: product.PictureUrl,
+                Brand: product.Brand,
+                Type: product.Type,
+                Quantity: item.Quantity
+            ));
+        }
+        return Result.Ok(new BasketDto(basket.ExtId, items));
+    }
+}
 
+/* List<BasketItemDto> items = basket.Items.Select(item =>
+        {
+            if (!productLookup.TryGetValue(item.ProductXid, out var product))            
+                throw new ProductNotFoundException(item.ProductXid);
             return new BasketItemDto(
                 ItemId: item.ExtId,
                 ProductId: product.ExtId,
@@ -28,13 +46,6 @@ public static class BasketMapper
                 Quantity: item.Quantity
             );
         }).ToList();
+        return new BasketDto(basket.ExtId, items); */
 
-        return new BasketDto(basket.ExtId, items);
-        /* {
-            Discount = basket.Discount,
-            Shipping = basket.Shipping,
-            Tax = basket.Tax
-        }; */
-    }
-}
 

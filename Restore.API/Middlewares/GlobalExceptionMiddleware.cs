@@ -1,8 +1,102 @@
+
 using System.Net;
 using System.Text.Json;
 using Restore.API.Responses;
+using Restore.Common.DTOs;
 using Restore.Common.Exceptions;
-using Restore.Domain.Exceptions;
+
+namespace Restore.API.Middlewares;
+
+public class GlobalExceptionMiddleware(
+    RequestDelegate next,
+    ILogger<GlobalExceptionMiddleware> logger,
+    IWebHostEnvironment env)
+{
+    private static readonly JsonSerializerOptions DevOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        WriteIndented = true
+    };
+
+    private static readonly JsonSerializerOptions ProdOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        WriteIndented = false
+    };
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
+        {
+            await next(context);
+        }
+        catch (Exception ex)
+        {
+            await HandleExceptionAsync(context, ex);
+        }
+    }
+
+    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+    {
+        logger.LogError(exception, "Unhandled exception occurred.");
+
+        bool isDev = env.IsDevelopment() || env.IsStaging();
+        var jsonOptions = isDev ? DevOptions : ProdOptions;
+
+        // Map exception to MethodResult
+        MethodResult<object> result;
+        HttpStatusCode statusCode;
+
+        switch (exception)
+        {
+            // For Dto Specific use this - throw new ValidationException<BasketDto>(errors);
+            case ValidationException<object> ve:
+                statusCode = HttpStatusCode.BadRequest;
+                result = ve.Result; // Already a MethodResult<object>
+                break;
+
+            default:
+                statusCode = HttpStatusCode.InternalServerError;
+                var msg = isDev ? $"{exception.Message} - {exception.StackTrace}" : "An unexpected error occurred.";
+                result = MethodResult<object>.Fail(MethodStatus.ServerError, msg);
+                break;
+        }
+
+        context.Response.Clear();
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = (int)statusCode;
+        await context.Response.WriteAsync(JsonSerializer.Serialize(result, jsonOptions));
+    }
+}
+
+
+/*  case BusinessException be:
+               statusCode = HttpStatusCode.BadRequest;
+               result = MethodResult<object>.Fail(MethodStatus.UnknownError, be.Message);
+               break;
+
+           case UnauthorizedException ue:
+               statusCode = HttpStatusCode.Unauthorized;
+               result = MethodResult<object>.Fail(MethodStatus.InvalidCredentials, ue.Message);
+               break;
+
+           case DuplicateException de:
+               statusCode = HttpStatusCode.Conflict;
+               result = MethodResult<object>.Fail(MethodStatus.AlreadyExists, de.Message);
+               break;
+
+           case NotFoundException ne:
+           case EntityNotFoundException ene:
+               statusCode = HttpStatusCode.NotFound;
+               result = MethodResult<object>.Fail(MethodStatus.NotFound, exception.Message);
+               break; */
+
+
+/* using System.Net;
+using System.Text.Json;
+using Restore.API.Responses;
+using Restore.Common.Exceptions;
+
 
 namespace Restore.API.Middlewares;
 
@@ -51,13 +145,18 @@ public class GlobalExceptionMiddleware(
         var jsonOptions = isDev ? DevOptions : ProdOptions;
 
         // Map specific exceptions to status codes and messages
+        // var statusCode = exception switch
+        // {
+        //     ValidationException => HttpStatusCode.BadRequest,
+        //     ArgumentNullException or BusinessException or DomainException => HttpStatusCode.BadRequest,          // All domain errors return 400            
+        //     DuplicateException => HttpStatusCode.Conflict,
+        //     UnauthorizedException => HttpStatusCode.Unauthorized,
+        //     NotFoundException or EntityNotFoundException => HttpStatusCode.NotFound,
+        //     _ => HttpStatusCode.InternalServerError
+        // };
         var statusCode = exception switch
         {
             ValidationException => HttpStatusCode.BadRequest,
-            ArgumentNullException or BusinessException or DomainException => HttpStatusCode.BadRequest,          // All domain errors return 400            
-            DuplicateException => HttpStatusCode.Conflict,
-            UnauthorizedException => HttpStatusCode.Unauthorized,
-            NotFoundException or EntityNotFoundException => HttpStatusCode.NotFound,
             _ => HttpStatusCode.InternalServerError
         };
 
@@ -109,4 +208,4 @@ public class GlobalExceptionMiddleware(
         }
 
     }
-}
+} */

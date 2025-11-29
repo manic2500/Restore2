@@ -1,23 +1,33 @@
 using Restore.Application.Baskets.Interfaces;
-using Restore.Common.Exceptions;
+using Restore.Common.DTOs;
 using Restore.Common.Interfaces;
-using Restore.Domain.Exceptions;
+using Restore.Common.Utilities;
+using Restore.Common.Extensions;
+
 
 namespace Restore.Application.Baskets.UseCases;
 
 public interface IIncreaseBasketItemUseCase
 {
-    Task ExecuteAsync(Guid basketXid, Guid productXid);
+    Task<MethodResult> ExecuteAsync(Guid basketXid, Guid productXid);
 }
 
 public class IncreaseBasketItemUseCase(IBasketRepository basketRepo, IUnitOfWork uow) : IIncreaseBasketItemUseCase
 {
-    public async Task ExecuteAsync(Guid basketId, Guid itemId)
+    public async Task<MethodResult> ExecuteAsync(Guid basketId, Guid itemId)
     {
-        var basket = await basketRepo.GetByExIdAsync(basketId) ?? throw new BasketNotFoundException(basketId);
+        var basketResult = await basketRepo.GetRequiredResultAsync(basketId);
+        if (!basketResult.Success)
+            return Result.Error(basketResult.Status, basketResult.Error!);
 
-        basket.IncreaseItem(itemId);
+        basketResult.Data.IncreaseItem(itemId);
 
         await uow.SaveChangesAsync();
+
+        return Result.Ok();
     }
 }
+
+/* var basket = await basketRepo.GetByExIdAsync(basketId);
+        if (basket is null)
+            return Result.NotFound($"Basket with id '{basketId}' not found.");  */
