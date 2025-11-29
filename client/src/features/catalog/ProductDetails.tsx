@@ -9,7 +9,8 @@ import { useFetchProductDetailsQuery } from "./catalogApi";
 export default function ProductDetails() {
     const { id } = useParams();
 
-    const { data: product } = useFetchProductDetailsQuery(id ? id : '');
+    const result = useFetchProductDetailsQuery(id ? id : '');
+    const product = result.data?.data;
 
     if (!product) return null
 

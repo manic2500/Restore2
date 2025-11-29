@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Restore.API.Extensions;
 using Restore.Application.Vouchers.DTOs;
 using Restore.Application.Vouchers.Interfaces;
+using Restore.Common.DTOs;
 
 namespace Restore.API.Controllers;
 
@@ -22,7 +23,6 @@ public class VoucherController(
     {
         var result = await getById.ExecuteAsync(id);
         return this.ToActionResult(result);
-        //return voucher is null ? NotFound() : Ok(voucher);
     }
 
     [HttpPost]
@@ -32,13 +32,15 @@ public class VoucherController(
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<VoucherDto>> Update(Guid id, [FromBody] VoucherRequest voucher)
     {
-        return Ok(await update.ExecuteAsync(voucher, id));
+        var result = await update.ExecuteAsync(voucher, id);
+        return this.ToActionResult(result);
+
     }
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        await delete.ExecuteAsync(id);
-        return NoContent();
+        var result = await delete.ExecuteAsync(id);
+        return this.ToActionResult(result);
     }
 }

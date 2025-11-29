@@ -1,14 +1,17 @@
 
-export interface RTKApiResponse {
+export interface RTKApiResponse<T> {
     status: number
-    data: {
-        success: boolean
-        status: number,
-        data: object[]
-        error: string,
-        errors: string[]
-    }
+    data: ApiResponse<T>
 }
+
+export interface ApiResponse<T> {
+    success: boolean
+    status: number,
+    data: T
+    error: string,
+    errors: string[]
+}
+
 /* interface ErrorData {
     details: string;
     statusCode: number;

@@ -10,7 +10,7 @@ const baseApiQuery = fetchBaseQuery({
     credentials: "include"
 });
 
-type TypedFetchError = FetchBaseQueryError & RTKApiResponse;
+type TypedFetchError = FetchBaseQueryError & RTKApiResponse<object>;
 
 //const sleep = () => new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -37,6 +37,8 @@ export const baseQueryWithErrorHandling = async (args: string | FetchArgs, api: 
                             }
                         };
                     }
+                    else
+                        toast.error(data.error ?? "Unknown error")
                     break;
                 case 400:
                 case 401:

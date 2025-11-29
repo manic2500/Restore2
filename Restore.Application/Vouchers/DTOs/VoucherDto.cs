@@ -3,7 +3,7 @@ using Restore.Domain.Entities;
 namespace Restore.Application.Vouchers.DTOs;
 
 public record VoucherDto(
-    Guid Xid,
+    Guid Id,
     string Code,
     string? Description,
     DiscountType DiscountType,

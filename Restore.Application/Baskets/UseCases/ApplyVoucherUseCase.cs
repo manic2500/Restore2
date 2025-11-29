@@ -36,7 +36,7 @@ public class ApplyVoucherUseCase(
         // 2. Load voucher
         var voucher = await voucherRepo.GetByCodeAsync(voucherCode);
         if (voucher is null)
-            return Result.NotFound<BasketDto>("Voucher not found.");
+            return Result.ValidationError<BasketDto>("Voucher not found.");
 
         // 3. Validate voucher state
         if (!voucher.IsActive)

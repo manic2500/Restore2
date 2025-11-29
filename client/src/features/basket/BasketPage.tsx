@@ -15,9 +15,11 @@ import { toast } from "react-toastify";
 
 export default function BasketPage() {
     const inputVoucherRef = useRef<HTMLInputElement>(null);
-    const { data: cart, isLoading } = useFetchBasketQuery();
+    const { data, isLoading } = useFetchBasketQuery();
     const [applyVoucher, { isLoading: isLoadingVoucher }] = useApplyVoucherMutation()
     const [removeVoucher, { isLoading: isLoadingRemoveVoucher }] = useRemoveVoucherMutation()
+
+    const cart = data?.data;
 
     if (isLoading) return <div>Loading....</div>
 

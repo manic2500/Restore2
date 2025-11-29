@@ -1,5 +1,6 @@
 import { baseQueryWithErrorHandling } from "@/app/api/baseApi";
 import type { Basket } from "@/app/models/basket";
+import type { ApiResponse } from "@/app/models/ErrorResponse";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const basketApi = createApi({
@@ -7,7 +8,7 @@ export const basketApi = createApi({
     baseQuery: baseQueryWithErrorHandling,
     tagTypes: ["Basket"],
     endpoints: (builder) => ({
-        fetchBasket: builder.query<Basket, void>({
+        fetchBasket: builder.query<ApiResponse<Basket>, void>({
             query: () => 'basket',
             providesTags: ["Basket"]
         }),

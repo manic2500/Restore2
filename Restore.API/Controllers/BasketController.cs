@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Restore.API.Extensions;
 using Restore.API.Requests.Basket;
 using Restore.Application.Baskets.DTOs;
 using Restore.Application.Baskets.UseCases;
@@ -25,7 +26,7 @@ public class BasketController(
     {
         var basketId = await GetOrCreateBasketIdAsync();
         var result = await getBasket.ExecuteAsync(basketId);
-        return Ok(result);
+        return this.ToActionResult(result);
     }
 
     // Create Basket and add Item
@@ -34,28 +35,26 @@ public class BasketController(
     public async Task<ActionResult<Guid>> AddItem(BasketItemRequest request)
     {
         var basketId = await GetOrCreateBasketIdAsync(true);
-        await addBasketItem.ExecuteAsync(basketId, request.ProductId, request.Quantity);
-        return Ok(new { basketId });
+        var result = await addBasketItem.ExecuteAsync(basketId, request.ProductId, request.Quantity);
+        return this.ToActionResult(result);
+        //return Ok(new { basketId });
     }
 
 
     [HttpPost("items/{itemId}/increment")]
     public async Task<IActionResult> IncrementItem(Guid itemId)
     {
-        /* bool success = Guid.TryParse(Request.Cookies["basketId"], out Guid basketId);
-        if (!success) throw new NotFoundException("Basket Not Found"); */
         var basketId = await GetOrCreateBasketIdAsync();
-
-        await increaseBasketItem.ExecuteAsync(basketId, itemId);
-        return NoContent();
+        var result = await increaseBasketItem.ExecuteAsync(basketId, itemId);
+        return this.ToActionResult(result);
     }
 
     [HttpPost("items/{itemId}/decrement")]
     public async Task<IActionResult> DecrementItem(Guid itemId)
     {
         var basketId = await GetOrCreateBasketIdAsync();
-        await decreaseBasketItem.ExecuteAsync(basketId, itemId);
-        return NoContent();
+        var result = await decreaseBasketItem.ExecuteAsync(basketId, itemId);
+        return this.ToActionResult(result);
     }
 
     // DELETE /{basketId}/items/{itemId} - Remove Basket Item
@@ -63,8 +62,8 @@ public class BasketController(
     public async Task<IActionResult> RemoveItem(Guid itemId)
     {
         var basketId = await GetOrCreateBasketIdAsync();
-        await removeItem.ExecuteAsync(basketId, itemId);
-        return NoContent();
+        var result = await removeItem.ExecuteAsync(basketId, itemId);
+        return this.ToActionResult(result);
     }
 
     // DELETE /{basketId} - CLEAR basket
@@ -72,8 +71,8 @@ public class BasketController(
     public async Task<IActionResult> ClearBasket()
     {
         var basketId = await GetOrCreateBasketIdAsync();
-        await clearBasket.ExecuteAsync(basketId);
-        return NoContent();
+        var result = await clearBasket.ExecuteAsync(basketId);
+        return this.ToActionResult(result);
     }
 
     [HttpPost("apply-voucher")]
@@ -81,15 +80,15 @@ public class BasketController(
     {
         var basketId = await GetOrCreateBasketIdAsync();
         var result = await applyVoucher.ExecuteAsync(basketId, req.VoucherCode);
-        return Ok(result);
+        return this.ToActionResult(result);
     }
 
     [HttpDelete("remove-voucher")]
     public async Task<IActionResult> RemoveVoucher()
     {
         var basketId = await GetOrCreateBasketIdAsync();
-        await removeVoucher.ExecuteAsync(basketId);
-        return NoContent();
+        var result = await removeVoucher.ExecuteAsync(basketId);
+        return this.ToActionResult(result);
     }
 
 
@@ -104,7 +103,8 @@ public class BasketController(
             return basketId;
         }
 
-        basketId = await createBasket.ExecuteAsync();
+        var result = await createBasket.ExecuteAsync();
+        basketId = result.Data;
 
         Response.Cookies.Append(cookieName, basketId.ToString(), new CookieOptions
         {
@@ -116,8 +116,6 @@ public class BasketController(
         });
 
         return basketId;
-
-        throw new InvalidOperationException("BasketId not available in HttpContext.");
-
+        //throw new InvalidOperationException("BasketId not available in HttpContext.");
     }
 }
