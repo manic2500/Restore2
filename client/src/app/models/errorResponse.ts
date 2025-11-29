@@ -1,12 +1,15 @@
 
-export interface RTKErrorResponse {
+export interface RTKApiResponse {
     status: number
     data: {
         success: boolean
-        error: ErrorData
+        status: number,
+        data: object[]
+        error: string,
+        errors: string[]
     }
 }
-interface ErrorData {
+/* interface ErrorData {
     details: string;
     statusCode: number;
     message: string;
@@ -17,7 +20,7 @@ interface ErrorData {
 export interface ValidationErrorResponse {
     status: number;
     data: string[];
-}
+} */
 /* Sample data - ValidationErrorResponse
 {
     "status": 400,

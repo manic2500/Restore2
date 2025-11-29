@@ -1,31 +1,38 @@
-/* using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Restore.Common.Exceptions;
+using Restore.API.Extensions;
+using Restore.Common.DTOs;
+using Restore.Common.Utilities;
+
 
 namespace Restore.API.Controllers;
 
 public class BuggyController : BaseApiController
 {
     [HttpGet("not-found")]
-    public IActionResult GetNotFound()
+    public ActionResult<object> GetNotFound()
     {
-        throw new NotFoundException("Not Found");
-        //return NotFound();
+        var result = Result.NotFound<object>("Test - Not Found Error");
+        return this.ToActionResult(result);
     }
 
     [HttpGet("bad-request")]
-    public IActionResult GetBadRequest()
+    public ActionResult<object> GetBadRequest()
     {
         //return BadRequest("This is not a good request");
-        throw new BusinessException("This is not a good request");
+        //throw new BusinessException("This is not a good request");
+        var result = Result.BadRequest<object>("This is not a good request");
+        return this.ToActionResult(result);
     }
 
     [HttpGet("unauthorized")]
-    public IActionResult GetUnauthorised()
+    public ActionResult<object> GetUnauthorised()
     {
         //return Unauthorized();
-        throw new UnauthorizedException("Unauthorized");
+        //throw new UnauthorizedException("Unauthorized");
+        var result = Result.InvalidCredentials<object>("Test - Unauthorized Error");
+        return this.ToActionResult(result);
     }
 
     [HttpGet("validation-error")]
@@ -61,4 +68,3 @@ public class UserDto
     public string Name { get; set; } = default!;
 }
 
- */

@@ -1,10 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Build.Tasks.Deployment.Bootstrapper;
 using Restore.API.Extensions;
-using Restore.API.Responses;
 using Restore.Application.Products.DTOs;
 using Restore.Application.Products.UseCases;
-using Restore.Common.DTOs;
 
 namespace Restore.API.Controllers
 {

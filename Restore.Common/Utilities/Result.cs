@@ -27,6 +27,12 @@ public static class Result
     public static MethodResult<T> NotFound<T>(string error) =>
         MethodResult<T>.Fail(MethodStatus.NotFound, error);
 
+    public static MethodResult BadRequest(string error) =>
+        MethodResult.Fail(MethodStatus.BadRequest, error);
+
+    public static MethodResult<T> BadRequest<T>(string error) =>
+        MethodResult<T>.Fail(MethodStatus.BadRequest, error);
+
 
     public static MethodResult AlreadyExists(string error) =>
         MethodResult.Fail(MethodStatus.AlreadyExists, error);

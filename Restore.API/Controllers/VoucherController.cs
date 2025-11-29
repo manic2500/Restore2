@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Restore.API.Extensions;
 using Restore.Application.Vouchers.DTOs;
 using Restore.Application.Vouchers.Interfaces;
 
@@ -19,8 +20,9 @@ public class VoucherController(
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<VoucherDto>> Get(Guid id)
     {
-        var voucher = await getById.ExecuteAsync(id);
-        return voucher is null ? NotFound() : Ok(voucher);
+        var result = await getById.ExecuteAsync(id);
+        return this.ToActionResult(result);
+        //return voucher is null ? NotFound() : Ok(voucher);
     }
 
     [HttpPost]

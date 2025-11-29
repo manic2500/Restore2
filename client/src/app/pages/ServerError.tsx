@@ -5,7 +5,8 @@ import { Link, useLocation } from "react-router-dom";
 export default function ServerError() {
     const { state } = useLocation()
     const isProd = import.meta.env.MODE === "production"
-    const showStack = !isProd && state?.error?.stackTrace
+    //const showStack = !isProd && state?.error?.stackTrace
+    const showStack = !isProd && state?.error
 
     return (
         <div className="flex flex-col items-center min-h-screen px-4 py-5">
@@ -16,7 +17,7 @@ export default function ServerError() {
 
                 {showStack ? (
                     <pre className="text-destructive w-fit text-left whitespace-pre-wrap text-sm bg-red-50 p-4 rounded-md border border-red-200">
-                        {state.error.stackTrace}
+                        {state.error}
                     </pre>
                 ) : (
                     <p className="text-muted-foreground text-center">
